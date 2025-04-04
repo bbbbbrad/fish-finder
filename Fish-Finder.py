@@ -20,7 +20,6 @@ class FishFinder:
         self.sorted_file = 'data_sorted.csv'
         self.driver = None
         self.wait_timeout = 10
-        
         self.folder_path.mkdir(parents=True, exist_ok=True)
 
     @contextmanager
@@ -46,9 +45,7 @@ class FishFinder:
 
     def _wait_for_element(self, by, value, timeout=None):
         timeout = timeout or self.wait_timeout
-        return WebDriverWait(self.driver, timeout).until(
-            EC.element_to_be_clickable((by, value))
-        )
+        return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable((by, value)))
 
     def search_for_species(self):
         self.driver.get('https://cteco.uconn.edu/projects/fish/viewer/index.html')
@@ -63,9 +60,7 @@ class FishFinder:
 
     def download_data(self):
         try:
-            streams = WebDriverWait(self.driver, self.wait_timeout).until(
-                EC.presence_of_all_elements_located((By.XPATH, '//*[@id="trunderline"]'))
-            )
+            streams = WebDriverWait(self.driver, self.wait_timeout).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="trunderline"]')))
             
             for i, stream in enumerate(streams, 1):
                 try:
@@ -94,13 +89,8 @@ class FishFinder:
             return
 
         try:
-            merged_df = pd.concat(
-                (pd.read_csv(file, low_memory=False) for file in csv_files),
-                ignore_index=True
-            )
-            
+            merged_df = pd.concat((pd.read_csv(file, low_memory=False) for file in csv_files), ignore_index=True)
             merged_df.drop_duplicates(inplace=True)
-            
             merged_df.to_csv(self.output_file, index=False)
             print(f" [+] Merged {len(csv_files)} CSV files to {self.output_file}")
 
@@ -110,7 +100,6 @@ class FishFinder:
                 print(f" [+] Sorted data saved to {self.sorted_file}")
             else:
                 print(f" [!] Column '{self.species}' not found in data.")
-
         except pd.errors.EmptyDataError:
             print(" [!] One or more CSV files were empty.")
         except Exception as e:
