@@ -45,14 +45,12 @@ class FishFinder:
             raise Exception(f"Failed to initialize WebDriver: {e}")
 
     def _wait_for_element(self, by, value, timeout=None):
-        """Helper method for consistent waiting"""
         timeout = timeout or self.wait_timeout
         return WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable((by, value))
         )
 
     def search_for_species(self):
-        """Search for fish species with error handling"""
         self.driver.get('https://cteco.uconn.edu/projects/fish/viewer/index.html')
         
         try:
